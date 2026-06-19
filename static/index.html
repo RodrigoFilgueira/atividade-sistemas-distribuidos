@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniAWS - Simulador de Serviços AWS</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-brands fa-aws brand-icon"></i>
+                <div class="brand-text">
+                    <h1>MiniAWS</h1>
+                    <span>Simulador Local</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard" id="btn-tab-dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="ec2" id="btn-tab-ec2">
+                    <i class="fa-solid fa-server"></i>
+                    <span>EC2 (Instâncias)</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="s3" id="btn-tab-s3">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>S3 (Armazenamento)</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="lambda" id="btn-tab-lambda">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>AWS Lambda</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="logs" id="btn-tab-logs">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Cloud Logs</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="status-indicator-active"></span>
+                <span>MiniAWS Running</span>
+            </div>
+        </aside>
+
+        <!-- Área Principal de Conteúdo -->
+        <main class="main-content">
+            <!-- Header Superior -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h2 id="current-tab-title">Dashboard</h2>
+                    <p id="current-tab-subtitle">Visão geral da sua infraestrutura simulada.</p>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="username">Estudante de Cloud</span>
+                        <span class="role">Sistemas Distribuídos</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Telas do SPA -->
+            <div class="tab-content">
+                
+                <!-- TAB: DASHBOARD -->
+                <section id="tab-dashboard" class="tab-pane active">
+                    <!-- Cards de Métricas -->
+                    <div class="metrics-grid">
+                        <div class="metric-card ec2-card">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-server"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Instâncias EC2</h3>
+                                <p class="metric-value" id="count-ec2">0</p>
+                                <span class="card-action-link" onclick="switchTab('ec2')">Gerenciar EC2 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card s3-card">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-box-open"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Buckets S3</h3>
+                                <p class="metric-value" id="count-s3">0</p>
+                                <span class="card-action-link" onclick="switchTab('s3')">Gerenciar S3 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card file-card">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-file-code"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Arquivos no S3</h3>
+                                <p class="metric-value" id="count-files">0</p>
+                                <span class="card-action-link" onclick="switchTab('s3')">Ver Arquivos <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card lambda-card">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div class="card-details">
+                                <h3>Gatilhos Lambda</h3>
+                                <p class="metric-value" id="count-lambda">0</p>
+                                <span class="card-action-link" onclick="switchTab('lambda')">Logs de Execução <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Atividades Recentes -->
+                    <div class="dashboard-layout-row">
+                        <div class="dashboard-panel activity-panel">
+                            <div class="panel-header">
+                                <h3>Logs de Eventos Recentes</h3>
+                                <button class="btn btn-sm btn-outline" onclick="switchTab('logs')">Ver Todos</button>
+                            </div>
+                            <div class="mini-logs-list" id="mini-logs-container">
+                                <!-- Preenchido dinamicamente por JS -->
+                                <p class="empty-state">Nenhum evento registrado ainda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: EC2 -->
+                <section id="tab-ec2" class="tab-pane">
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-create-ec2')">
+                            <i class="fa-solid fa-plus"></i> Nova Instância
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome da Instância</th>
+                                    <th>Status</th>
+                                    <th>Criação</th>
+                                    <th>Site Hospedado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ec2-instances-list">
+                                <!-- Preenchido dinamicamente por JS -->
+                                <tr>
+                                    <td colspan="5" class="table-empty">Nenhuma instância criada. Crie uma acima!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- TAB: S3 -->
+                <section id="tab-s3" class="tab-pane">
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-create-s3')">
+                            <i class="fa-solid fa-plus"></i> Novo Bucket S3
+                        </button>
+                    </div>
+
+                    <div class="s3-split-layout">
+                        <!-- Lista de Buckets -->
+                        <div class="s3-buckets-panel">
+                            <h3>Meus Buckets</h3>
+                            <div class="buckets-grid" id="s3-buckets-list">
+                                <!-- Preenchido dinamicamente por JS -->
+                                <div class="bucket-card empty">Nenhum bucket criado.</div>
+                            </div>
+                        </div>
+
+                        <!-- Detalhes do Bucket Selecionado -->
+                        <div class="s3-files-panel" id="s3-files-panel" style="display: none;">
+                            <div class="files-panel-header">
+                                <div>
+                                    <h3>Bucket: <span id="current-bucket-name" class="highlight-text">nome-do-bucket</span></h3>
+                                    <p class="panel-subtitle">Arquivos armazenados no bucket</p>
+                                </div>
+                                <button class="btn btn-sm btn-primary" onclick="openModal('modal-upload-file')">
+                                    <i class="fa-solid fa-upload"></i> Upload de Arquivo
+                                </button>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome do Arquivo</th>
+                                            <th>Tamanho</th>
+                                            <th>Data de Envio</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="s3-files-list">
+                                        <!-- Preenchido dinamicamente por JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: AWS LAMBDA -->
+                <section id="tab-lambda" class="tab-pane">
+                    <div class="lambda-details-card">
+                        <div class="lambda-header-info">
+                            <div class="lambda-badge">
+                                <i class="fa-solid fa-bolt"></i> AWS Lambda
+                            </div>
+                            <h3>Função: <code>miniAWS-S3-AutoTrigger-Logger</code></h3>
+                            <p>Função serverless simulada disparada automaticamente a cada upload em qualquer bucket S3.</p>
+                        </div>
+                        <div class="lambda-description">
+                            <h4>Gatilho configurado:</h4>
+                            <div class="trigger-box">
+                                <i class="fa-solid fa-box-open text-orange"></i>
+                                <div>
+                                    <strong>S3 Bucket (ObjectCreated:*)</strong>
+                                    <span>Toda vez que um arquivo é inserido nas pastas de storage.</span>
+                                </div>
+                            </div>
+
+                            <h4>Ação simulada:</h4>
+                            <p>Esta função processa os metadados do arquivo em segundo plano, extrai seu tamanho e extensão e registra uma entrada oficial nos logs de auditoria da nuvem.</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-panel logs-panel">
+                        <h3>Execuções Recentes da Função Lambda</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data/Hora</th>
+                                        <th>Status do Log</th>
+                                        <th>Ação Executada</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lambda-executions-list">
+                                    <!-- Preenchido dinamicamente por JS -->
+                                    <tr>
+                                        <td colspan="3" class="table-empty">Nenhum evento registrado ainda. Envie arquivos no S3 para rodar a Lambda!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: CLOUD LOGS -->
+                <section id="tab-logs" class="tab-pane">
+                    <div class="section-actions">
+                        <div class="filter-controls">
+                            <button class="btn btn-sm btn-outline active" onclick="filterLogs('all')">Todos</button>
+                            <button class="btn btn-sm btn-outline" onclick="filterLogs('EC2')">EC2</button>
+                            <button class="btn btn-sm btn-outline" onclick="filterLogs('S3')">S3</button>
+                            <button class="btn btn-sm btn-outline" onclick="filterLogs('Lambda')">Lambda</button>
+                        </div>
+                        <button class="btn btn-sm btn-outline text-danger" id="btn-clear-logs" style="display:none;">
+                            <i class="fa-solid fa-trash-can"></i> Limpar Logs
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">Data</th>
+                                    <th style="width: 12%">Hora</th>
+                                    <th style="width: 15%">Serviço</th>
+                                    <th style="width: 58%">Mensagem do Evento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cloud-logs-list">
+                                <!-- Preenchido dinamicamente por JS -->
+                                <tr>
+                                    <td colspan="4" class="table-empty">Nenhum evento registrado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: Criar Instância EC2 -->
+    <div class="modal-backdrop" id="modal-create-ec2">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Criar Nova Instância EC2</h3>
+                <button class="close-btn" onclick="closeModal('modal-create-ec2')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-create-ec2" onsubmit="handleCreateEC2(event)">
+                    <div class="form-group">
+                        <label for="ec2-name">Nome da Instância</label>
+                        <input type="text" id="ec2-name" required placeholder="ex: webserver-prod, instancia01">
+                        <small>Apenas letras, números, hífen (-) e underline (_).</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-ec2')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Instância</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Criar Bucket S3 -->
+    <div class="modal-backdrop" id="modal-create-s3">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Criar Novo Bucket S3</h3>
+                <button class="close-btn" onclick="closeModal('modal-create-s3')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-create-s3" onsubmit="handleCreateS3(event)">
+                    <div class="form-group">
+                        <label for="s3-name">Nome do Bucket (S3-compliant)</label>
+                        <input type="text" id="s3-name" required placeholder="ex: backup-imagens, site-estatico">
+                        <small>O nome será convertido para letras minúsculas e caracteres compatíveis.</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-s3')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Bucket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Upload Arquivo no S3 -->
+    <div class="modal-backdrop" id="modal-upload-file">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Enviar Arquivo para o S3</h3>
+                <button class="close-btn" onclick="closeModal('modal-upload-file')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-upload-file" onsubmit="handleUploadS3(event)">
+                    <div class="form-group">
+                        <label>Arquivo</label>
+                        <input type="file" id="s3-file-input" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-upload-file')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Fazer Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Publicar Site em Instância EC2 -->
+    <div class="modal-backdrop" id="modal-publish-site">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Publicar Site na Instância: <span id="publish-target-ec2" class="highlight-text"></span></h3>
+                <button class="close-btn" onclick="closeModal('modal-publish-site')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Abas internas do Modal -->
+                <div class="modal-tabs">
+                    <button class="modal-tab-btn active" onclick="switchModalPublishTab('direct')">Upload Direto</button>
+                    <button class="modal-tab-btn" onclick="switchModalPublishTab('s3-deploy')">Importar do S3</button>
+                </div>
+
+                <!-- Modo: Upload Direto -->
+                <form id="form-publish-direct" onsubmit="handlePublishDirect(event)">
+                    <div class="form-group">
+                        <label for="publish-direct-file">Selecione o arquivo HTML</label>
+                        <input type="file" id="publish-direct-file" accept=".html" required>
+                        <small>Apenas arquivos HTML serão aceitos para simular o site hospedado.</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-publish-site')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Fazer Deploy</button>
+                    </div>
+                </form>
+
+                <!-- Modo: Importar do S3 -->
+                <form id="form-publish-s3" onsubmit="handlePublishS3(event)" style="display: none;">
+                    <div class="form-group">
+                        <label for="publish-s3-bucket">Selecione o Bucket S3 de Origem</label>
+                        <select id="publish-s3-bucket" onchange="loadFilesForPublishDropdown(this.value)" required>
+                            <option value="">Selecione um bucket...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="publish-s3-file">Selecione o Arquivo HTML</label>
+                        <select id="publish-s3-file" required>
+                            <option value="">Selecione primeiro o bucket...</option>
+                        </select>
+                        <small>O arquivo deve estar no formato HTML.</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-publish-site')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Importar e Publicar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Customizado -->
+    <script src="app.js"></script>
+</body>
+</html>
