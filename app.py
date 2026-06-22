@@ -109,12 +109,24 @@ def create_instance():
     instance_path = os.path.join(INSTANCES_DIR, name)
     os.makedirs(instance_path, exist_ok=True)
     
+    # Ler parâmetros de hardware
+    instance_type = data.get('instance_type', 't2.micro').strip()
+    vcpu = int(data.get('vcpu', 1))
+    ram = int(data.get('ram', 1))
+    os_ami = data.get('os', 'Amazon Linux 2023').strip()
+    disk = int(data.get('disk', 30))
+
     # Adicionar metadados
     instances[name] = {
         'name': name,
         'status': 'stopped',
         'created_at': datetime.now().strftime("%d/%m/%Y %H:%M"),
-        'has_site': False
+        'has_site': False,
+        'instance_type': instance_type,
+        'vcpu': vcpu,
+        'ram': ram,
+        'os': os_ami,
+        'disk': disk
     }
     save_json(INSTANCES_JSON, instances)
     

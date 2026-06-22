@@ -1023,3 +1023,153 @@ body {
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
     }
 }
+
+/* --- MODAL LARGO (EC2 Create) --- */
+.modal-card-lg {
+    width: 680px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* --- Cards de Tipo de Instância EC2 --- */
+.instance-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.instance-type-card {
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+    user-select: none;
+}
+
+.instance-type-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+}
+
+.instance-type-card.selected {
+    border-color: var(--aws-orange);
+    background-color: rgba(255, 153, 0, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.15);
+}
+
+.inst-type-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.inst-type-name {
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+.instance-type-card.selected .inst-type-name {
+    color: var(--aws-orange);
+}
+
+.inst-type-specs {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.inst-type-desc {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* --- Range Slider (EBS Disk) --- */
+.form-group input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.form-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--aws-orange);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(255, 153, 0, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.form-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(255, 153, 0, 0.6);
+}
+
+.range-limits {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* --- HW Specs na Tabela EC2 --- */
+.hw-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.82rem;
+}
+
+.hw-specs span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+}
+
+.hw-specs span i {
+    color: var(--aws-orange);
+    width: 14px;
+}
+
+/* --- Instance Type Tag na Tabela --- */
+.instance-type-tag {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-family: monospace;
+    font-weight: 600;
+}
+

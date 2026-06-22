@@ -1,1 +1,19 @@
-{}
+{
+    "01": {
+        "name": "01",
+        "status": "stopped",
+        "created_at": "22/06/2026 20:34",
+        "has_site": true
+    },
+    "teste": {
+        "name": "teste",
+        "status": "stopped",
+        "created_at": "22/06/2026 20:46",
+        "has_site": false,
+        "instance_type": "t2.micro",
+        "vcpu": 1,
+        "ram": 1,
+        "os": "Windows Server 2022",
+        "disk": 20
+    }
+}

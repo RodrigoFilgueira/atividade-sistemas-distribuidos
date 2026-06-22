@@ -160,7 +160,7 @@ async function fetchInstances() {
         
         const listContainer = document.getElementById('ec2-instances-list');
         if (instances.length === 0) {
-            listContainer.innerHTML = '<tr><td colspan="5" class="table-empty">Nenhuma instância criada. Crie uma acima!</td></tr>';
+            listContainer.innerHTML = '<tr><td colspan="7" class="table-empty">Nenhuma instância criada. Crie uma acima!</td></tr>';
             return;
         }
 
@@ -178,16 +178,35 @@ async function fetchInstances() {
                 ? `<button class="btn btn-sm btn-outline text-danger" onclick="stopInstance('${inst.name}')"><i class="fa-solid fa-stop"></i> Parar</button>`
                 : `<button class="btn btn-sm btn-outline text-success" onclick="startInstance('${inst.name}')"><i class="fa-solid fa-play"></i> Iniciar</button>`;
 
+            // Hardware info
+            const instanceType = inst.instance_type || 't2.micro';
+            const vcpu = inst.vcpu || 1;
+            const ram = inst.ram || 1;
+            const os = inst.os || 'Amazon Linux 2023';
+            const disk = inst.disk || 30;
+
+            const osEmoji = os.includes('Ubuntu') ? '🟠' : os.includes('Windows') ? '🪟' : os.includes('Red Hat') ? '🔴' : os.includes('Debian') ? '🔵' : '🐧';
+
             return `
                 <tr>
-                    <td><strong>${inst.name}</strong></td>
+                    <td>
+                        <strong>${inst.name}</strong>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;"><i class="fa-solid fa-hard-drive"></i> ${disk} GB EBS</div>
+                    </td>
+                    <td><code class="instance-type-tag">${instanceType}</code></td>
+                    <td>
+                        <div class="hw-specs">
+                            <span title="vCPUs"><i class="fa-solid fa-microchip"></i> ${vcpu}</span>
+                            <span title="RAM"><i class="fa-solid fa-memory"></i> ${ram} GB</span>
+                        </div>
+                    </td>
+                    <td><span title="${os}">${osEmoji} ${os}</span></td>
                     <td>
                         <span class="status-badge ${statusClass}">
                             <span class="status-dot"></span>
                             ${statusLabel}
                         </span>
                     </td>
-                    <td>${inst.created_at}</td>
                     <td>
                         ${inst.has_site 
                             ? `<a href="${url}" target="_blank" class="${linkClass}"><i class="fa-solid fa-globe"></i> Acessar Site</a>`
@@ -212,18 +231,31 @@ async function handleCreateEC2(event) {
     event.preventDefault();
     const input = document.getElementById('ec2-name');
     const name = input.value.trim();
+    const instanceType = document.getElementById('ec2-instance-type').value;
+    const vcpu = parseInt(document.getElementById('ec2-vcpu').value);
+    const ram = parseInt(document.getElementById('ec2-ram').value);
+    const os = document.getElementById('ec2-os').value;
+    const disk = parseInt(document.getElementById('ec2-disk').value);
     
     try {
         const response = await fetch('/api/instances', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name })
+            body: JSON.stringify({ name, instance_type: instanceType, vcpu, ram, os, disk })
         });
         
         const data = await response.json();
         if (response.ok) {
             closeModal('modal-create-ec2');
             input.value = '';
+            // Resetar seleção de tipo para padrão
+            document.querySelectorAll('.instance-type-card').forEach(c => c.classList.remove('selected'));
+            document.querySelector('.instance-type-card[data-type="t2.micro"]').classList.add('selected');
+            document.getElementById('ec2-instance-type').value = 't2.micro';
+            document.getElementById('ec2-vcpu').value = '1';
+            document.getElementById('ec2-ram').value = '1';
+            document.getElementById('ec2-disk').value = '30';
+            document.getElementById('ec2-disk-label').textContent = '30 GB';
             fetchInstances();
             fetchDashboard();
         } else {
@@ -232,6 +264,14 @@ async function handleCreateEC2(event) {
     } catch (error) {
         console.error('Erro:', error);
     }
+}
+
+function selectInstanceType(card) {
+    document.querySelectorAll('.instance-type-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('ec2-instance-type').value = card.dataset.type;
+    document.getElementById('ec2-vcpu').value = card.dataset.vcpu;
+    document.getElementById('ec2-ram').value = card.dataset.ram;
 }
 
 async function startInstance(name) {

@@ -153,8 +153,10 @@
                             <thead>
                                 <tr>
                                     <th>Nome da Instância</th>
+                                    <th>Tipo</th>
+                                    <th>vCPU / RAM</th>
+                                    <th>S.O.</th>
                                     <th>Status</th>
-                                    <th>Criação</th>
                                     <th>Site Hospedado</th>
                                     <th>Ações</th>
                                 </tr>
@@ -162,7 +164,7 @@
                             <tbody id="ec2-instances-list">
                                 <!-- Preenchido dinamicamente por JS -->
                                 <tr>
-                                    <td colspan="5" class="table-empty">Nenhuma instância criada. Crie uma acima!</td>
+                                    <td colspan="7" class="table-empty">Nenhuma instância criada. Crie uma acima!</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -305,21 +307,85 @@
 
     <!-- MODAL: Criar Instância EC2 -->
     <div class="modal-backdrop" id="modal-create-ec2">
-        <div class="modal-card">
+        <div class="modal-card modal-card-lg">
             <div class="modal-header">
-                <h3>Criar Nova Instância EC2</h3>
+                <h3><i class="fa-solid fa-server"></i> Criar Nova Instância EC2</h3>
                 <button class="close-btn" onclick="closeModal('modal-create-ec2')">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="form-create-ec2" onsubmit="handleCreateEC2(event)">
+                    <!-- Nome -->
                     <div class="form-group">
                         <label for="ec2-name">Nome da Instância</label>
                         <input type="text" id="ec2-name" required placeholder="ex: webserver-prod, instancia01">
                         <small>Apenas letras, números, hífen (-) e underline (_).</small>
                     </div>
+
+                    <!-- Tipo de Instância -->
+                    <div class="form-group">
+                        <label>Tipo de Instância</label>
+                        <div class="instance-type-grid" id="instance-type-grid">
+                            <div class="instance-type-card selected" data-type="t2.micro" data-vcpu="1" data-ram="1" onclick="selectInstanceType(this)">
+                                <div class="inst-type-badge">Free Tier</div>
+                                <div class="inst-type-name">t2.micro</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 1 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 1 GB RAM</div>
+                                <div class="inst-type-desc">Uso leve, desenvolvimento</div>
+                            </div>
+                            <div class="instance-type-card" data-type="t3.small" data-vcpu="2" data-ram="2" onclick="selectInstanceType(this)">
+                                <div class="inst-type-name">t3.small</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 2 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 2 GB RAM</div>
+                                <div class="inst-type-desc">Sites simples, APIs</div>
+                            </div>
+                            <div class="instance-type-card" data-type="t3.medium" data-vcpu="2" data-ram="4" onclick="selectInstanceType(this)">
+                                <div class="inst-type-name">t3.medium</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 2 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 4 GB RAM</div>
+                                <div class="inst-type-desc">Aplicações médias</div>
+                            </div>
+                            <div class="instance-type-card" data-type="m5.large" data-vcpu="2" data-ram="8" onclick="selectInstanceType(this)">
+                                <div class="inst-type-name">m5.large</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 2 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 8 GB RAM</div>
+                                <div class="inst-type-desc">Balanceado, produção</div>
+                            </div>
+                            <div class="instance-type-card" data-type="m5.xlarge" data-vcpu="4" data-ram="16" onclick="selectInstanceType(this)">
+                                <div class="inst-type-name">m5.xlarge</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 4 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 16 GB RAM</div>
+                                <div class="inst-type-desc">Alta carga, banco de dados</div>
+                            </div>
+                            <div class="instance-type-card" data-type="c5.2xlarge" data-vcpu="8" data-ram="16" onclick="selectInstanceType(this)">
+                                <div class="inst-type-name">c5.2xlarge</div>
+                                <div class="inst-type-specs"><i class="fa-solid fa-microchip"></i> 8 vCPU &nbsp;|&nbsp; <i class="fa-solid fa-memory"></i> 16 GB RAM</div>
+                                <div class="inst-type-desc">Computação intensiva</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="ec2-instance-type" value="t2.micro">
+                        <input type="hidden" id="ec2-vcpu" value="1">
+                        <input type="hidden" id="ec2-ram" value="1">
+                    </div>
+
+                    <!-- Sistema Operacional -->
+                    <div class="form-group">
+                        <label for="ec2-os">Sistema Operacional (AMI)</label>
+                        <select id="ec2-os">
+                            <option value="Amazon Linux 2023">🐧 Amazon Linux 2023</option>
+                            <option value="Ubuntu 22.04 LTS">🟠 Ubuntu 22.04 LTS</option>
+                            <option value="Ubuntu 20.04 LTS">🟠 Ubuntu 20.04 LTS</option>
+                            <option value="Debian 12">🔵 Debian 12 (Bookworm)</option>
+                            <option value="Red Hat Enterprise Linux 9">🔴 Red Hat Enterprise Linux 9</option>
+                            <option value="Windows Server 2022">🪟 Windows Server 2022</option>
+                        </select>
+                    </div>
+
+                    <!-- Disco -->
+                    <div class="form-group">
+                        <label for="ec2-disk">Armazenamento (EBS Volume) &mdash; <strong id="ec2-disk-label">30 GB</strong></label>
+                        <input type="range" id="ec2-disk" min="8" max="500" value="30" step="2"
+                               oninput="document.getElementById('ec2-disk-label').textContent = this.value + ' GB'">
+                        <div class="range-limits"><span>8 GB</span><span>500 GB</span></div>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-ec2')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Criar Instância</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> Lançar Instância</button>
                     </div>
                 </form>
             </div>
