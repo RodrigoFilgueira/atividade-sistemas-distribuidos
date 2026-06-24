@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniAWS - Deploy Efetuado com Sucesso!</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b071e;
+            --card-bg: rgba(25, 18, 55, 0.45);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #8a2be2;
+            --secondary: #00f2fe;
+            --accent: #ff007f;
+            --text-main: #f3f0ff;
+            --text-muted: #a59fc9;
+            --success: #00ff87;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(138, 43, 226, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(0, 242, 254, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(255, 0, 127, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeito de partículas de fundo sutis */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+            background-size: 40px 40px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 580px;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(138, 43, 226, 0.2), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Detalhe da borda neon animada no topo */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+            background-size: 300% 100%;
+            animation: borderGlow 6s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .icon-wrapper {
+            margin-bottom: 24px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .icon-bg {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 242, 254, 0.2));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(138, 43, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+
+        .icon-rocket {
+            font-size: 36px;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 255, 135, 0.1);
+            color: var(--success);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(0, 255, 135, 0.25);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 30%, #a59fc9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* Detalhes Técnicos da Simulação */
+        .tech-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .detail-item:first-child {
+            padding-top: 0;
+        }
+
+        .label {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .value {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .value.highlight-s3 {
+            color: var(--secondary);
+        }
+
+        .value.highlight-ec2 {
+            color: var(--primary);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #6f1ab6 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
+            background: linear-gradient(135deg, #993ff3 0%, var(--primary) 100%);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer sutil */
+        .footer {
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <!-- Ícone/Logo animado -->
+            <div class="icon-wrapper">
+                <div class="icon-bg">
+                    <span class="icon-rocket">🚀</span>
+                </div>
+            </div>
+
+            <!-- Status de Online -->
+            <div>
+                <span class="badge">
+                    <span class="badge-dot"></span>
+                    Instância Ativa
+                </span>
+            </div>
+
+            <!-- Título Principal -->
+            <h1>MiniAWS funcionando!</h1>
+            <p class="subtitle">Este arquivo HTML foi carregado a partir do bucket do S3 e publicado com sucesso no servidor EC2 simulado.</p>
+
+            <!-- Detalhes do Ambiente -->
+            <div class="tech-details">
+                <div class="detail-item">
+                    <span class="label">📦 Serviço de Origem</span>
+                    <span class="value highlight-s3">Amazon S3 (Bucket)</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">🌐 Servido por</span>
+                    <span class="value highlight-ec2">Amazon EC2 (Web Server)</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">⚡ Evento Lambda</span>
+                    <span class="value" style="color: var(--accent);">s3:ObjectCreated</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">📅 Data de Deploy</span>
+                    <span class="value" id="deploy-date">--/--/----</span>
+                </div>
+            </div>
+
+            <!-- Ação interativa -->
+            <button class="btn" onclick="celebrar()">
+                🎉 Testar Conexão!
+            </button>
+        </div>
+
+        <div class="footer" style="text-align: center;">
+            MiniAWS Simulator • Disciplina de Sistemas Distribuídos
+        </div>
+    </div>
+
+    <!-- Efeito de Confetes Simples -->
+    <script>
+        // Coloca a data atual formatada no campo de Deploy
+        const now = new Date();
+        const dateString = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('deploy-date').innerText = dateString;
+
+        // Função de comemoração ao clicar no botão
+        function celebrar() {
+            // Criar pequenos confetes piscando na tela por alguns segundos
+            for (let i = 0; i < 30; i++) {
+                criarConfete();
+            }
+        }
+
+        function criarConfete() {
+            const confete = document.createElement('div');
+            confete.style.position = 'fixed';
+            confete.style.width = Math.random() * 10 + 5 + 'px';
+            confete.style.height = Math.random() * 10 + 5 + 'px';
+            confete.style.borderRadius = '50%';
+            
+            // Cores aleatórias baseadas na paleta
+            const cores = ['#8a2be2', '#00f2fe', '#ff007f', '#00ff87', '#ffff00'];
+            confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+            
+            // Posição inicial no centro da tela
+            confete.style.left = '50%';
+            confete.style.top = '50%';
+            confete.style.zIndex = '9999';
+            confete.style.pointerEvents = 'none';
+            
+            document.body.appendChild(confete);
+
+            // Animação de dispersão
+            const angulo = Math.random() * Math.PI * 2;
+            const velocidade = Math.random() * 200 + 100;
+            const destinoX = Math.cos(angulo) * velocidade;
+            const destinoY = Math.sin(angulo) * velocidade + 100;
+
+            const animacao = confete.animate([
+                { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+                { transform: `translate(calc(-50% + ${destinoX}px), calc(-50% + ${destinoY}px)) scale(0.2)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 1000 + 800,
+                easing: 'ease-out'
+            });
+
+            animacao.onfinish = () => {
+                confete.remove();
+            };
+        }
+    </script>
+</body>
+</html>

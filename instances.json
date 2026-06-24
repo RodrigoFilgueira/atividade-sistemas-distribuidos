@@ -1,19 +1,13 @@
 {
-    "01": {
-        "name": "01",
+    "servidor-web-01": {
+        "name": "servidor-web-01",
         "status": "stopped",
-        "created_at": "22/06/2026 20:34",
-        "has_site": true
-    },
-    "teste": {
-        "name": "teste",
-        "status": "stopped",
-        "created_at": "22/06/2026 20:46",
-        "has_site": false,
-        "instance_type": "t2.micro",
-        "vcpu": 1,
-        "ram": 1,
-        "os": "Windows Server 2022",
-        "disk": 20
+        "created_at": "23/06/2026 22:06",
+        "has_site": true,
+        "instance_type": "t3.medium",
+        "vcpu": 2,
+        "ram": 4,
+        "os": "Amazon Linux 2023",
+        "disk": 30
     }
 }

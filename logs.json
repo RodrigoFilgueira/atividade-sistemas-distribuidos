@@ -1,79 +1,51 @@
 [
     {
-        "id": 11,
-        "date": "22/06/2026",
-        "time": "20:51:27",
-        "service": "EC2",
-        "event": "Instância \"01\" interrompida."
-    },
-    {
-        "id": 10,
-        "date": "22/06/2026",
-        "time": "20:49:45",
-        "service": "EC2",
-        "event": "Instância \"01\" iniciada."
-    },
-    {
-        "id": 9,
-        "date": "22/06/2026",
-        "time": "20:49:41",
-        "service": "EC2",
-        "event": "Site publicado via upload direto na instância \"01\"."
-    },
-    {
-        "id": 8,
-        "date": "22/06/2026",
-        "time": "20:47:10",
-        "service": "EC2",
-        "event": "Instância \"teste\" interrompida."
-    },
-    {
         "id": 7,
-        "date": "22/06/2026",
-        "time": "20:47:07",
+        "date": "23/06/2026",
+        "time": "22:07:28",
         "service": "EC2",
-        "event": "Instância \"teste\" iniciada."
+        "event": "Instância \"servidor-web-01\" interrompida."
     },
     {
         "id": 6,
-        "date": "22/06/2026",
-        "time": "20:46:53",
+        "date": "23/06/2026",
+        "time": "22:07:11",
         "service": "EC2",
-        "event": "Instância \"teste\" criada com sucesso."
+        "event": "Site publicado na instância \"servidor-web-01\" a partir do S3 (bucket-estatico-grupo5/index_teste.html)."
     },
     {
         "id": 5,
-        "date": "22/06/2026",
-        "time": "20:34:30",
+        "date": "23/06/2026",
+        "time": "22:06:51",
         "service": "EC2",
-        "event": "Instância \"01\" criada com sucesso."
+        "event": "Instância \"servidor-web-01\" iniciada."
     },
     {
         "id": 4,
-        "date": "22/06/2026",
-        "time": "20:34:23",
+        "date": "23/06/2026",
+        "time": "22:06:41",
         "service": "EC2",
-        "event": "Instância \"01\" excluída."
+        "event": "Instância \"servidor-web-01\" criada com sucesso."
     },
     {
         "id": 3,
-        "date": "22/06/2026",
-        "time": "20:34:22",
-        "service": "EC2",
-        "event": "Instância \"01\" interrompida."
+        "date": "23/06/2026",
+        "time": "22:05:40",
+        "service": "Lambda",
+        "event": "Função executada automaticamente em resposta ao upload de \"index_teste.html\" no bucket \"bucket-estatico-grupo5\"."
     },
     {
         "id": 2,
-        "date": "22/06/2026",
-        "time": "20:34:19",
-        "service": "EC2",
-        "event": "Instância \"01\" iniciada."
+        "date": "23/06/2026",
+        "time": "22:05:40",
+        "service": "S3",
+        "event": "Arquivo \"index_teste.html\" enviado para o bucket \"bucket-estatico-grupo5\"."
     },
     {
         "id": 1,
-        "date": "22/06/2026",
-        "time": "20:34:16",
-        "service": "EC2",
-        "event": "Instância \"01\" criada com sucesso."
+        "date": "23/06/2026",
+        "time": "22:05:26",
+        "service": "S3",
+        "event": "Bucket \"bucket-estatico-grupo5\" criado."
     }
 ]
